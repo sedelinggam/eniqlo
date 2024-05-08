@@ -7,6 +7,12 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
+type key int
+
+const (
+	KeyPhoneNumber key = iota
+)
+
 type JWTClaims struct {
 	Id          string
 	PhoneNumber string

@@ -9,6 +9,7 @@ import (
 	"eniqlo/package/crypto/bcrypt"
 	cryptoJWT "eniqlo/package/crypto/jwt"
 	"eniqlo/package/lumen"
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -19,6 +20,12 @@ func (ss staffService) Register(ctx context.Context, requestData request.StaffRe
 		err          error
 		hashPassword string
 	)
+
+	//Check if user already exist
+	cacheAccessToken := cache.GetAccessToken(requestData.PhoneNumber)
+	if cacheAccessToken != nil && cacheAccessToken.Expired.After(time.Now()) {
+		return nil, lumen.NewError(lumen.ErrConflict, errors.New("conflicts"))
+	}
 
 	//Password Hash
 	hashPassword, err = bcrypt.HashPassword(requestData.Password)
