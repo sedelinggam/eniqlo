@@ -4,10 +4,12 @@ import (
 	"context"
 	"eniqlo/internal/delivery/http/v1/request"
 	"eniqlo/internal/delivery/http/v1/response"
+	cache "eniqlo/package/caching"
 	"eniqlo/package/crypto/bcrypt"
 	cryptoJWT "eniqlo/package/crypto/jwt"
 	"eniqlo/package/lumen"
 	"errors"
+	"time"
 )
 
 func (ss staffService) Login(ctx context.Context, requestData request.StaffLogin) (*response.UserAccessToken, error) {
@@ -15,6 +17,13 @@ func (ss staffService) Login(ctx context.Context, requestData request.StaffLogin
 	var (
 		err error
 	)
+
+	//Check token from cache
+
+	cacheAccessToken := cache.GetShortVideo(requestData.PhoneNumber)
+	if cacheAccessToken != nil && cacheAccessToken.Expired.After(time.Now()) {
+		return &cacheAccessToken.JWTClaim, nil
+	}
 
 	// Find the user by credentials
 	user, err := ss.staffRepo.GetStaffByPhoneNumber(ctx, requestData.PhoneNumber)
@@ -35,9 +44,13 @@ func (ss staffService) Login(ctx context.Context, requestData request.StaffLogin
 	if err != nil {
 		return nil, lumen.NewError(lumen.ErrInternalFailure, err)
 	}
-	return &response.UserAccessToken{
+	respAccessToken := &response.UserAccessToken{
 		PhoneNumber: user.PhoneNumber,
 		Name:        user.Name,
 		AccessToken: *accessToken,
-	}, nil
+	}
+
+	cache.AddAccessToken(user.PhoneNumber, respAccessToken, time.Now().Add(time.Hour*7))
+
+	return respAccessToken, nil
 }

@@ -5,6 +5,7 @@ import (
 	"eniqlo/internal/delivery/http/v1/request"
 	"eniqlo/internal/delivery/http/v1/response"
 	"eniqlo/internal/entity"
+	cache "eniqlo/package/caching"
 	"eniqlo/package/crypto/bcrypt"
 	cryptoJWT "eniqlo/package/crypto/jwt"
 	"eniqlo/package/lumen"
@@ -18,6 +19,7 @@ func (ss staffService) Register(ctx context.Context, requestData request.StaffRe
 		err          error
 		hashPassword string
 	)
+
 	//Password Hash
 	hashPassword, err = bcrypt.HashPassword(requestData.Password)
 	if err != nil {
@@ -31,6 +33,13 @@ func (ss staffService) Register(ctx context.Context, requestData request.StaffRe
 		Password:    hashPassword,
 		CreatedAt:   time.Now(),
 	}
+
+	//Check Phone Number
+	err = userData.CheckPhoneNumber()
+	if err != nil {
+		return nil, lumen.NewError(lumen.ErrBadRequest, err)
+	}
+
 	err = ss.staffRepo.Create(ctx, userData)
 	if err != nil {
 		//Duplicate unique key
@@ -45,9 +54,15 @@ func (ss staffService) Register(ctx context.Context, requestData request.StaffRe
 	if err != nil {
 		return nil, lumen.NewError(lumen.ErrInternalFailure, err)
 	}
-	return &response.UserAccessToken{
+
+	//Cache The token
+	respAccessToken := &response.UserAccessToken{
 		PhoneNumber: requestData.PhoneNumber,
 		Name:        requestData.Name,
 		AccessToken: *accessToken,
-	}, nil
+	}
+
+	cache.AddAccessToken(userData.PhoneNumber, respAccessToken, time.Now().Add(time.Hour*7))
+
+	return respAccessToken, nil
 }
