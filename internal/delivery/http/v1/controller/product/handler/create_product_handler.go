@@ -13,6 +13,14 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// @Summary Create Product
+// @Description create product
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} response.CreateProduct
+// @Param request.CreateProduct
+// @Header 200 {string} Token "Token"
+// @Router /v1/product [post]
 func (ph productHandler) CreateProduct(c echo.Context) error {
 	var (
 		req  request.CreateProduct
