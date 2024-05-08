@@ -19,8 +19,7 @@ func (ss staffService) Login(ctx context.Context, requestData request.StaffLogin
 	)
 
 	//Check token from cache
-
-	cacheAccessToken := cache.GetShortVideo(requestData.PhoneNumber)
+	cacheAccessToken := cache.GetAccessToken(requestData.PhoneNumber)
 	if cacheAccessToken != nil && cacheAccessToken.Expired.After(time.Now()) {
 		return &cacheAccessToken.JWTClaim, nil
 	}

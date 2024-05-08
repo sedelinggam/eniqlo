@@ -1,0 +1,32 @@
+basePath: /v1
+definitions:
+  response.CreateProduct:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /v1/product:
+    post:
+      consumes:
+      - application/json
+      description: create product
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          headers:
+            Token:
+              description: Token
+              type: string
+          schema:
+            $ref: '#/definitions/response.CreateProduct'
+      summary: Create Product
+swagger: "2.0"

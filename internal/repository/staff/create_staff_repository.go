@@ -14,7 +14,6 @@ func (sr staffRepository) Create(ctx context.Context, data entity.Staff) error {
 	if err != nil {
 		return err
 	}
-
 	tx.Commit()
 	return nil
 }

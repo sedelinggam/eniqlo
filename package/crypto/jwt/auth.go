@@ -2,9 +2,18 @@ package cryptoJWT
 
 import (
 	"eniqlo/config"
+	"eniqlo/package/lumen"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v4"
+	"github.com/labstack/echo/v4"
+)
+
+type key int
+
+const (
+	KeyPhoneNumber key = iota
 )
 
 type JWTClaims struct {
@@ -54,4 +63,17 @@ func VerifyToken(token string) (*JWTPayload, error) {
 	}
 
 	return payload, nil
+}
+
+func JWTConfig() echojwt.Config {
+	config := echojwt.Config{
+		SigningKey: []byte(config.JWTSecret()),
+		NewClaimsFunc: func(c echo.Context) jwt.Claims {
+			return new(JWTClaims)
+		},
+		ErrorHandler: func(c echo.Context, err error) error {
+			return lumen.FromError(lumen.NewError(lumen.ErrUnauthorized, err)).SendResponse(c)
+		},
+	}
+	return config
 }

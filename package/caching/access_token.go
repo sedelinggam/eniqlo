@@ -17,7 +17,7 @@ func AddAccessToken(phoneNumber string, sv *response.UserAccessToken, jwtExpired
 	}
 }
 
-func GetShortVideo(phoneNumber string) *AccessToken {
+func GetAccessToken(phoneNumber string) *AccessToken {
 	if accessToken == nil {
 		return nil
 	}
