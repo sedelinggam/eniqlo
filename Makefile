@@ -20,3 +20,9 @@ rollback-dev:
 
 gen-swagger:
 	swag init -g cmd/main.go -output cmd/docs
+
+db-up:
+	docker compose -f ./deploy/docker-compose.yaml up -d
+
+db-down:
+	docker compose -f ./deploy/docker-compose.yaml down
