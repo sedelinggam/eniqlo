@@ -18,7 +18,7 @@ func (pr productRepository) Gets(ctx context.Context, req request.GetProducts) (
 
 	shouldFilter := ctx.Value(request.ShouldGetProductsFilterKey).(request.ShouldGetProductsFilter)
 
-	query := `SELECT id name sku category image_url notes price stock location is_available created_at`
+	query := `SELECT id, name, sku, category, image_url, notes, price, stock, location, is_available, created_at FROM products`
 
 	if shouldFilter.ID {
 		filter = append(filter, req.ID)
@@ -71,10 +71,12 @@ func (pr productRepository) Gets(ctx context.Context, req request.GetProducts) (
 	}
 
 	filter = append(filter, req.Limit)
-	query += fmt.Sprintf(" LIMIT %d", len(filter))
+	query += fmt.Sprintf(" LIMIT $%d", len(filter))
 
 	filter = append(filter, req.Offset)
-	query += fmt.Sprintf(" OFFSET %d", len(filter))
+	query += fmt.Sprintf(" OFFSET $%d", len(filter))
+
+	fmt.Println(query)
 
 	err = pr.db.Select(&resp, query, filter...)
 	if err != nil {
