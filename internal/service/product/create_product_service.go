@@ -5,6 +5,7 @@ import (
 	"eniqlo/internal/delivery/http/v1/request"
 	"eniqlo/internal/delivery/http/v1/response"
 	"eniqlo/internal/entity"
+	valueobject "eniqlo/internal/value_object"
 	"eniqlo/package/lumen"
 	"time"
 
@@ -12,10 +13,16 @@ import (
 )
 
 func (ps productService) CreateProduct(ctx context.Context, requestData request.CreateProduct) (*response.CreateProduct, error) {
-	//Password Hash
+
 	var (
 		err error
 	)
+
+	//Check product category
+	err = valueobject.CheckProductCategory(requestData.Category)
+	if err != nil {
+		return nil, lumen.NewError(lumen.ErrBadRequest, err)
+	}
 
 	//Create Cat
 	catData := entity.Product{
