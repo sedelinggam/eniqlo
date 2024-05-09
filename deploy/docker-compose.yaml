@@ -1,0 +1,14 @@
+version: '3'
+services:
+  postgres:
+    container_name: eniqlo_db
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=.docker/data/postgres
+    volumes:
+      - ./.docker/data/postgres:/data/postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
