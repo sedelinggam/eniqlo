@@ -40,7 +40,7 @@ func (ph productHandler) UpdateProduct(c echo.Context) error {
 		return lumen.FromError(err).SendResponse(c)
 	}
 
-	return c.JSON(http.StatusCreated, response.Common{
+	return c.JSON(http.StatusOK, response.Common{
 		Message: "success",
 		Data:    resp,
 	})
