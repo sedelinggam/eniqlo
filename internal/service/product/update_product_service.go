@@ -15,8 +15,9 @@ func (ps productService) UpdateProduct(ctx context.Context, requestData request.
 		err error
 	)
 
-	//Create Cat
+	//Update Cat
 	catData := entity.Product{
+		ID:          requestData.ID,
 		Name:        requestData.Name,
 		SKU:         requestData.Sku,
 		Category:    requestData.Category,

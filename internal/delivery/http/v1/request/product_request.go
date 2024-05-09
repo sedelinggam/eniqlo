@@ -13,6 +13,7 @@ type CreateProduct struct {
 }
 
 type UpdateProduct struct {
+	ID          string `json:"id"`
 	Name        string `json:"name" validate:"required,min=1,max=30"`
 	Sku         string `json:"sku" validate:"required,min=1,max=30"`
 	Category    string `json:"category" validate:"required"`

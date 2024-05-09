@@ -4,6 +4,7 @@ import (
 	"context"
 	"eniqlo/internal/delivery/http/v1/request"
 	"eniqlo/internal/delivery/http/v1/response"
+	valueobject "eniqlo/internal/value_object"
 	cryptoJWT "eniqlo/package/crypto/jwt"
 	"eniqlo/package/lumen"
 	"net/http"
@@ -34,6 +35,12 @@ func (ph productHandler) CreateProduct(c echo.Context) error {
 
 	// Create a new validator instance
 	err = ph.val.Struct(req)
+	if err != nil {
+		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
+	}
+
+	//Check product category
+	err = valueobject.CheckProductCategory(req.Category)
 	if err != nil {
 		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
 	}
