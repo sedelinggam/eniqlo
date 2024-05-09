@@ -15,6 +15,7 @@ type productService struct {
 
 type ProductService interface {
 	CreateProduct(ctx context.Context, requestData request.CreateProduct) (*response.CreateProduct, error)
+	GetProducts(ctx context.Context, requestData request.GetProducts) (*[]response.GetProducts, error)
 }
 
 func New(db *sqlx.DB) ProductService {

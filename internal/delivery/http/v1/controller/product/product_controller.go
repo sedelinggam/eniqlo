@@ -18,4 +18,5 @@ func Init(group *echo.Group, val *validator.Validate, productSvc productService.
 	privateRoute.Use(echojwt.WithConfig(cryptoJWT.JWTConfig()))
 	privateRoute.POST("", handler.CreateProduct)
 	privateRoute.PUT("/:id", handler.CreateProduct)
+	privateRoute.GET("", handler.GetProducts)
 }

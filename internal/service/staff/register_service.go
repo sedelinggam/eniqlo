@@ -64,6 +64,7 @@ func (ss staffService) Register(ctx context.Context, requestData request.StaffRe
 
 	//Cache The token
 	respAccessToken := &response.UserAccessToken{
+		UserID:      userData.ID,
 		PhoneNumber: requestData.PhoneNumber,
 		Name:        requestData.Name,
 		AccessToken: *accessToken,
