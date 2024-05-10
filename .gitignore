@@ -1,6 +1,7 @@
 .env
-vendor
 .air.toml
 tmp
 
 .vscode
+/vendor
+main_pinginciuman
