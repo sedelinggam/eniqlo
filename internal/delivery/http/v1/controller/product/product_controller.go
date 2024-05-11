@@ -15,6 +15,7 @@ func Init(group *echo.Group, val *validator.Validate, productSvc productService.
 	handler := productHandler.NewHandler(productSvc, val)
 
 	privateRoute := user
+	privateRoute.GET("/customer", handler.GetCustomerProducts)
 	privateRoute.Use(echojwt.WithConfig(cryptoJWT.JWTConfig()))
 	privateRoute.POST("", handler.CreateProduct)
 	privateRoute.PUT("/:id", handler.UpdateProduct)
