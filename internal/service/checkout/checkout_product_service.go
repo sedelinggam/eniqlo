@@ -28,6 +28,7 @@ func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData reque
 	totalPrice := uint(0)
 
 	// get product detail
+	products := make(map[string]*entity.Product)
 	for _, productReq := range requestData.ProductDetails {
 		product, err := cs.productRepo.GetProductByID(ctx, productReq.ProductID)
 		// check if product not found
@@ -47,6 +48,8 @@ func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData reque
 
 		// calculate total price
 		totalPrice += product.Price * uint(productReq.Quantity)
+
+		products[product.ID] = &product
 	}
 
 	// validate paid amount
@@ -78,7 +81,7 @@ func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData reque
 
 	//Update product stock
 	for _, productReq := range requestData.ProductDetails {
-		product, _ := cs.productRepo.GetProductByID(ctx, productReq.ProductID)
+		product := products[productReq.ProductID]
 
 		// create checkout detail
 		checkoutDetailErr := cs.checkoutDetailRepo.CreateCheckoutDetail(ctx, entity.CheckoutDetail{
