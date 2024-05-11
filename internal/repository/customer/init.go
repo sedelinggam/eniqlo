@@ -14,6 +14,7 @@ type customerRepository struct {
 type CustomerRepository interface {
 	Register(ctx context.Context, data entity.Customer) error
 	GetCustomerByPhoneNumber(ctx context.Context, phoneNumber string) (*entity.Customer, error)
+	GetCustomerByID(ctx context.Context, id string) (*entity.Customer, error)
 }
 
 func New(db *sqlx.DB) CustomerRepository {

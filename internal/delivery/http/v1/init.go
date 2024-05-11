@@ -4,6 +4,7 @@ import (
 	customerController "eniqlo/internal/delivery/http/v1/controller/customer"
 	productController "eniqlo/internal/delivery/http/v1/controller/product"
 	staffControllers "eniqlo/internal/delivery/http/v1/controller/staff"
+	checkoutService "eniqlo/internal/service/checkout"
 	customerService "eniqlo/internal/service/customer"
 	productService "eniqlo/internal/service/product"
 	staffService "eniqlo/internal/service/staff"
@@ -21,10 +22,11 @@ func Init(app *echo.Echo, db *sqlx.DB, val *validator.Validate) {
 		staffSvc    = staffService.New(db)
 		productSvc  = productService.New(db)
 		customerSvc = customerService.New(db)
+		checkoutSvc = checkoutService.New(db)
 	)
 	v1 := app.Group("/v1")
 	staffControllers.Init(v1, val, staffSvc)
-	productController.Init(v1, val, productSvc)
+	productController.Init(v1, val, productSvc, checkoutSvc)
 	customerController.Init(v1, val, customerSvc)
 	v1.GET("/swagger/*", echoSwagger.WrapHandler)
 }
