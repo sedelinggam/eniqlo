@@ -6,6 +6,19 @@ run:
 build:
 	GOOS=linux GOARCH=amd64 go build -o main_pinginciuman cmd/main.go
 
+build-image:
+	docker build -f ./deploy/Dockerfile -t malikilamalik/eniqilo:v1.0.0.0 .
+
+run-image:
+	docker run -e DB_NAME=$(DB_NAME)  -e DB_PORT=$(DB_PORT) -e DB_HOST=$(DB_HOST) \
+	-e DB_USERNAME=$(DB_USERNAME) \
+	-e DB_PASSWORD=$(DB_PASSWORD) \
+	-e DB_PARAMS=$(DB_PARAMS) \
+	-e JWT_SECRET=$(JWT_SECRET) \
+	-e BCRYPT_SALT=$(BCRYPT_SALT) \
+	--network eniqlo_default \
+	-p 8080:8080 malikilamalik/eniqilo:v1.0.0.0
+
 migrate:
 	migrate -database "postgres://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=verify-full&rootcert=ap-southeast-1-bundle.pem" -path migrations up
 
@@ -25,7 +38,7 @@ gen-swagger:
 	swag init -g cmd/main.go -output cmd/docs
 
 db-up:
-	docker compose -f ./deploy/docker-compose.yaml up -d
+	docker compose up -d
 
 db-down:
-	docker compose -f ./deploy/docker-compose.yaml down
+	docker compose down

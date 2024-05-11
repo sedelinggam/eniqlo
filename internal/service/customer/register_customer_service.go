@@ -14,7 +14,6 @@ import (
 func (cs customerService) Register(ctx context.Context, requestData request.CustomerRegister) (*response.CustomerRegister, error) {
 
 	existCustomer, err := cs.customerRepo.GetCustomerByPhoneNumber(ctx, requestData.PhoneNumber)
-
 	if err != nil {
 		return nil, lumen.NewError(lumen.ErrInternalFailure, err)
 	}

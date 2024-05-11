@@ -33,9 +33,9 @@ func (ps productService) CreateProduct(ctx context.Context, requestData request.
 		ImageUrl:    requestData.ImageURL,
 		Notes:       requestData.Notes,
 		Price:       requestData.Price,
-		Stock:       requestData.Stock,
+		Stock:       *requestData.Stock,
 		Location:    requestData.Location,
-		IsAvailable: requestData.IsAvailable,
+		IsAvailable: *requestData.IsAvailable,
 		CreatedAt:   time.Now(),
 	}
 
