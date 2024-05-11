@@ -15,6 +15,8 @@ type productRepository struct {
 type ProductRepository interface {
 	Create(ctx context.Context, data entity.Product) error
 	Gets(ctx context.Context, req request.GetProducts) (*[]entity.Product, error)
+	GetProductByID(ctx context.Context, id string) (entity.Product, error)
+	UpdateStock(ctx context.Context, id string, stock int) error
 }
 
 func New(db *sqlx.DB) ProductRepository {
