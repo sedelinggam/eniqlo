@@ -1,4 +1,4 @@
-package productHandler
+package customerHandler
 
 import (
 	"context"
@@ -12,28 +12,30 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (ph productHandler) DeleteProduct(c echo.Context) error {
+func (ch customerHandler) GetCustomer(c echo.Context) error {
 	var (
-		req  request.DeleteProduct
-		resp *response.DeleteProduct
+		req  request.Customer
+		resp []*response.Customer
 		err  error
 	)
-
-	if id := c.Param("id"); id != "" {
-		err := ph.val.Var(c.Param("id"), "uuid")
-		if err != nil {
-			return lumen.FromError(lumen.NewError(lumen.ErrNotFound, err)).SendResponse(c)
-		}
-		req.ID = c.Param("id")
+	queries := c.QueryParams()
+	if name := queries.Get("name"); name != "" {
+		name := queries.Get("name")
+		req.Name = &name
 	}
 
-	// Get jwt user ID
+	if phoneNumber := queries.Get("phoneNumber"); phoneNumber != "" {
+		phoneNumber := queries.Get("phoneNumber")
+		req.PhoneNumber = &phoneNumber
+	}
+
+	//Get jwt user ID
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*cryptoJWT.JWTClaims)
 	phoneNumber := claims.PhoneNumber
 	ctx := context.WithValue(c.Request().Context(), cryptoJWT.KeyPhoneNumber, phoneNumber)
 
-	resp, err = ph.productService.DeleteProducts(ctx, req)
+	resp, err = ch.customerService.GetCustomers(ctx, req)
 	if err != nil {
 		return lumen.FromError(err).SendResponse(c)
 	}

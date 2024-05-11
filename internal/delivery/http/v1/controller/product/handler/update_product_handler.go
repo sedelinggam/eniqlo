@@ -7,7 +7,9 @@ import (
 	valueobject "eniqlo/internal/value_object"
 	cryptoJWT "eniqlo/package/crypto/jwt"
 	"eniqlo/package/lumen"
+	"errors"
 	"net/http"
+	"regexp"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
@@ -27,7 +29,7 @@ func (ph productHandler) UpdateProduct(c echo.Context) error {
 	if id := c.Param("id"); id != "" {
 		err := ph.val.Var(c.Param("id"), "uuid")
 		if err != nil {
-			return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
+			return lumen.FromError(lumen.NewError(lumen.ErrNotFound, err)).SendResponse(c)
 		}
 		req.ID = c.Param("id")
 	}
@@ -43,6 +45,13 @@ func (ph productHandler) UpdateProduct(c echo.Context) error {
 	if err != nil {
 		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
 	}
+
+	urlRegex := `^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/|\/|\/\/)?[A-z0-9_-]*?[:]?[A-z0-9_-]*?[@]?[A-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$`
+	var re = regexp.MustCompile(urlRegex)
+	if !re.MatchString(req.ImageURL) {
+		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, errors.New("invalid url"))).SendResponse(c)
+	}
+
 	//Get jwt user ID
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*cryptoJWT.JWTClaims)

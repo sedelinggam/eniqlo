@@ -10,7 +10,7 @@ func (pr productRepository) GetProductByID(ctx context.Context, id string) (enti
 	var product entity.Product
 
 	query := fmt.Sprintf(`SELECT * FROM %s WHERE id = $1 AND "deleted_at" IS NULL`, product.TableName())
-
+	query += " ORDER BY created_at ASC"
 	err := pr.db.GetContext(ctx, &product, query, id)
 	if err != nil {
 		return product, err
