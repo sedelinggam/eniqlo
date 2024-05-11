@@ -10,27 +10,26 @@ import (
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
-
 	"github.com/labstack/echo/v4"
 )
 
-// @Summary Create Product
-// @Description create product
-// @Accept  json
-// @Produce  json
-// @Success 200 {object} response.CreateProduct
-// @Param request.CreateProduct
-// @Header 200 {string} Token "Token"
-// @Router /v1/product [post]
-func (ph productHandler) CreateProduct(c echo.Context) error {
+func (ph productHandler) UpdateProduct(c echo.Context) error {
 	var (
-		req  request.CreateProduct
-		resp *response.CreateProduct
+		req  request.UpdateProduct
+		resp *response.UpdateProduct
 		err  error
 	)
 	err = c.Bind(&req)
 	if err != nil {
 		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
+	}
+
+	if id := c.Param("id"); id != "" {
+		err := ph.val.Var(c.Param("id"), "uuid")
+		if err != nil {
+			return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
+		}
+		req.ID = c.Param("id")
 	}
 
 	// Create a new validator instance
@@ -44,19 +43,18 @@ func (ph productHandler) CreateProduct(c echo.Context) error {
 	if err != nil {
 		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
 	}
-
 	//Get jwt user ID
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(*cryptoJWT.JWTClaims)
 	phoneNumber := claims.PhoneNumber
 	ctx := context.WithValue(c.Request().Context(), cryptoJWT.KeyPhoneNumber, phoneNumber)
 
-	resp, err = ph.productService.CreateProduct(ctx, req)
+	resp, err = ph.productService.UpdateProduct(ctx, req)
 	if err != nil {
 		return lumen.FromError(err).SendResponse(c)
 	}
 
-	return c.JSON(http.StatusCreated, response.Common{
+	return c.JSON(http.StatusOK, response.Common{
 		Message: "success",
 		Data:    resp,
 	})
