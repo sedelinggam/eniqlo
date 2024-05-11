@@ -13,6 +13,18 @@ import (
 )
 
 func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData request.CheckoutProduct) (*response.CheckoutResponse, error) {
+
+	// check customer
+	customer, customerErr := cs.customerRepo.GetCustomerByID(ctx, requestData.CustomerID)
+
+	if customerErr != nil {
+		return nil, lumen.NewError(lumen.ErrInternalFailure, customerErr)
+	}
+
+	if customer == nil {
+		return nil, lumen.NewError(lumen.ErrNotFound, errors.New("customer not found"))
+	}
+
 	totalPrice := uint(0)
 
 	// get product detail
@@ -67,6 +79,20 @@ func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData reque
 	//Update product stock
 	for _, productReq := range requestData.ProductDetails {
 		product, _ := cs.productRepo.GetProductByID(ctx, productReq.ProductID)
+
+		// create checkout detail
+		checkoutDetailErr := cs.checkoutDetailRepo.CreateCheckoutDetail(ctx, entity.CheckoutDetail{
+			ID:         uuid.New().String(),
+			CheckoutID: checkout.ID,
+			ProductID:  productReq.ProductID,
+			Quantity:   productReq.Quantity,
+		})
+
+		if checkoutDetailErr != nil {
+			return nil, lumen.NewError(lumen.ErrInternalFailure, checkoutDetailErr)
+		}
+
+		// update stock
 		newStock := product.Stock - uint(productReq.Quantity)
 		err = cs.productRepo.UpdateStock(ctx, productReq.ProductID, int(newStock))
 		if err != nil {

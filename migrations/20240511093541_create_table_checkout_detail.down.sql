@@ -1,1 +1,1 @@
-DROP TABLE checkout_detail;
+DROP TABLE checkout_details;

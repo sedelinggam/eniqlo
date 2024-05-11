@@ -1,4 +1,4 @@
-CREATE TABLE checkout_detail (
+CREATE TABLE checkout_details (
     id uuid PRIMARY KEY,
     checkout_id uuid NOT NULL,
     product_id uuid NOT NULL,
