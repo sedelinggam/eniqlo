@@ -12,6 +12,11 @@ type UpdateProduct struct {
 	UpdatedAt string `json:"updatedAt"`
 }
 
+type DeleteProduct struct {
+	ID            string `json:"id"`
+	DeleteProduct string `json:"deletedAt"`
+}
+
 type GetProducts struct {
 	ID          string    `json:"id"`
 	Name        string    `json:"name"`

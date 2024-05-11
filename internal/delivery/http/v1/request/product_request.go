@@ -38,6 +38,10 @@ type GetProducts struct {
 	CreatedAt   string
 }
 
+type DeleteProduct struct {
+	ID string
+}
+
 type GetProductsFilterKey string
 
 const (
