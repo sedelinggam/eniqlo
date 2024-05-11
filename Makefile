@@ -6,6 +6,9 @@ run:
 build:
 	GOOS=linux GOARCH=amd64 go build -o main_pinginciuman cmd/main.go
 
+build-image:
+	docker build -f ./deploy/Dockerfile -t eniqilo .
+
 migrate:
 	migrate -database "postgres://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)/$(DB_NAME)?sslmode=verify-full&rootcert=ap-southeast-1-bundle.pem" -path migrations up
 
@@ -25,7 +28,7 @@ gen-swagger:
 	swag init -g cmd/main.go -output cmd/docs
 
 db-up:
-	docker compose -f ./deploy/docker-compose.yaml up -d
+	docker compose up -d
 
 db-down:
-	docker compose -f ./deploy/docker-compose.yaml down
+	docker compose down
