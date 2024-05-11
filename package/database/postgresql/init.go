@@ -19,7 +19,7 @@ func New() *sqlx.DB {
 		Database: os.Getenv("DB_NAME"),
 	}
 	dsn := config.FormatDSN()
-	db, err := sqlx.Connect("pgx", dsn)
+	db, err := sqlx.Open("pgx", dsn)
 
 	if err != nil {
 		log.Println("m=GetPool,msg=connection has failed", err)
@@ -30,8 +30,8 @@ func New() *sqlx.DB {
 		return nil
 	}
 
-	db.SetMaxOpenConns(60)
-	db.SetMaxIdleConns(60)
+	db.SetMaxOpenConns(20)
+	db.SetMaxIdleConns(20)
 
 	return db
 }

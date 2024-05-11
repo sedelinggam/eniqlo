@@ -15,6 +15,7 @@ type productRepository struct {
 type ProductRepository interface {
 	Create(ctx context.Context, data entity.Product) error
 	Update(ctx context.Context, data entity.Product) error
+	UpdateDeletedAt(ctx context.Context, data entity.Product) error
 	Gets(ctx context.Context, req request.GetProducts) (*[]entity.Product, error)
 }
 

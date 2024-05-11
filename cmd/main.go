@@ -13,10 +13,7 @@ import (
 // @BasePath /v1
 func main() {
 	//Load the .env file
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("error: failed to load the env file")
-	}
+	_ = godotenv.Load(".env")
 
 	s := server.NewServer()
 
