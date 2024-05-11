@@ -5,28 +5,19 @@ import (
 	"eniqlo/internal/delivery/http/v1/request"
 	"eniqlo/internal/delivery/http/v1/response"
 	"eniqlo/internal/entity"
-	valueobject "eniqlo/internal/value_object"
 	"eniqlo/package/lumen"
 	"time"
-
-	"github.com/google/uuid"
 )
 
-func (ps productService) CreateProduct(ctx context.Context, requestData request.CreateProduct) (*response.CreateProduct, error) {
-
+func (ps productService) UpdateProduct(ctx context.Context, requestData request.UpdateProduct) (*response.UpdateProduct, error) {
+	//Password Hash
 	var (
 		err error
 	)
 
-	//Check product category
-	err = valueobject.CheckProductCategory(requestData.Category)
-	if err != nil {
-		return nil, lumen.NewError(lumen.ErrBadRequest, err)
-	}
-
-	//Create Cat
+	//Update Cat
 	catData := entity.Product{
-		ID:          uuid.New().String(),
+		ID:          requestData.ID,
 		Name:        requestData.Name,
 		SKU:         requestData.Sku,
 		Category:    requestData.Category,
@@ -36,16 +27,15 @@ func (ps productService) CreateProduct(ctx context.Context, requestData request.
 		Stock:       requestData.Stock,
 		Location:    requestData.Location,
 		IsAvailable: requestData.IsAvailable,
-		CreatedAt:   time.Now(),
 	}
 
-	err = ps.productRepo.Create(ctx, catData)
+	err = ps.productRepo.Update(ctx, catData)
 	if err != nil {
 		return nil, lumen.NewError(lumen.ErrInternalFailure, err)
 	}
 
-	return &response.CreateProduct{
+	return &response.UpdateProduct{
 		ID:        catData.ID,
-		CreatedAt: catData.CreatedAt.Format(time.RFC3339),
+		UpdatedAt: time.Now().Format(time.RFC3339),
 	}, nil
 }

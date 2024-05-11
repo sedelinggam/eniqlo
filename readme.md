@@ -4,27 +4,29 @@ runme:
   version: v3
 ---
 
-# 🐱Cats Social
+# 🐱EniQilo
 
-Cats Social is an app that allows cat owners to match their cats with each other.
+EniQilo is an app that allows staff to add product and customer to buy the products from the store.
 
 ## 🌟Features
 
-Cats Social offers the following features:
+EniQilo offers the following features:
 
 - **Authentication**:
-- User registration
-- User login
-- **Cat Management (CRUD)**:
-- Create new cat profiles
-- View existing cat profiles
-- Update cat profiles
-- Delete cat profiles
-- **Matching**:
-- Match your cat with other cats
-- View matching cats
-- Approve or reject matches
-- Delete matches
+- Staff registration
+- Staff login
+- **Product Management (CRUD)**:
+- Create new product
+- View existing product
+- Update product
+- Delete product
+- **Search SKU**:
+- Search product by SKU
+- **Checkout**:
+- Customer registration
+- View customers
+- Checkout products
+- View checkout history
 
 ## ⛔️ Requirements
 
@@ -33,17 +35,18 @@ Before running this app make sure you have this installed on your puter :
 - [Golang 1.22.0](https://go.dev/dl/)
 - [PostgreSQL](https://www.postgresql.org/download/)
 - [golang-migrate](https://github.com/golang-migrate/migrate)
+- [docker](https://docs.docker.com/engine/install/ubuntu/)
 
 ## 🎖Prerequisite
 
 To run the application, follow these steps before run the program:
 
-1. Make sure you have Golang, PostgreSQL, and Golang Migrate installed and configured on your system.
+1. Make sure you have Golang, PostgreSQL, Golang Migrate, and Docker installed and configured on your system.
 2. Clone this repository:
 
 ```bash {"id":"01HXBJ7XEECXDYSM92BBJFY4V5"}
 
-git clone https://github.com/sedelinggam/cats-social.git
+git clone https://github.com/sedelinggam/eniqilo.git
 
 ```
 
@@ -51,7 +54,7 @@ git clone https://github.com/sedelinggam/cats-social.git
 
 ```bash {"id":"01HXBJ7XEECXDYSM92BC18F9P1"}
 
-cd cats-social
+cd eniqilo
 
 ```
 
@@ -106,4 +109,15 @@ make run
 
 You can access the application in your web browser at http://localhost:8080
 
-migrate create -ext sql -dir migrations add_user_table
+## 🐋 Build Image
+
+Make sure you already installed Docker on your computer.
+Adjust the `.env` file to make sure it's connected to the database and then you can build the Docker image by running:
+```bash
+make build-image
+```
+
+After the image is build, you can run it using:
+```bash
+docker run -p 8080:8080 eniqilo -d
+```

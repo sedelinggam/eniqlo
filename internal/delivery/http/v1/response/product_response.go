@@ -7,6 +7,11 @@ type CreateProduct struct {
 	CreatedAt string `json:"createdAt"`
 }
 
+type UpdateProduct struct {
+	ID        string `json:"id"`
+	UpdatedAt string `json:"updatedAt"`
+}
+
 type GetProducts struct {
 	ID          string    `json:"id"`
 	Name        string    `json:"name"`
