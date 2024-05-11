@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func (pr productRepository) Gets(ctx context.Context, req request.GetProducts) (*[]entity.Product, error) {
+func (pr productRepository) GetCustomerProducts(ctx context.Context, req request.GetCustomerProducts) (*[]entity.Product, error) {
 	var (
 		conditions []string
 		filter     []interface{}
@@ -16,37 +16,25 @@ func (pr productRepository) Gets(ctx context.Context, req request.GetProducts) (
 		err        error
 	)
 
-	shouldFilter := ctx.Value(request.ShouldGetProductsFilterKey).(request.ShouldGetProductsFilter)
-
 	query := `SELECT id, name, sku, category, image_url, notes, price, stock, location, is_available, created_at FROM products`
 
-	if shouldFilter.ID {
-		filter = append(filter, req.ID)
-		conditions = append(conditions, fmt.Sprintf("id = $%d", len(filter)))
-	}
-
-	if shouldFilter.Name {
+	if req.Name != nil {
 		filter = append(filter, req.Name)
 		conditions = append(conditions, fmt.Sprintf("name ILIKE '%%' || $%d || '%%'", len(filter)))
 	}
 
-	if shouldFilter.Category {
+	if req.Category != nil {
 		filter = append(filter, req.Category)
 		conditions = append(conditions, fmt.Sprintf("category = $%d", len(filter)))
 	}
 
-	if shouldFilter.IsAvailable {
-		filter = append(filter, req.IsAvailable)
-		conditions = append(conditions, fmt.Sprintf("is_available = $%d", len(filter)))
-	}
-
-	if shouldFilter.Sku {
+	if req.Sku != nil {
 		filter = append(filter, req.Sku)
 		conditions = append(conditions, fmt.Sprintf("sku = $%d", len(filter)))
 	}
 
-	if shouldFilter.InStock {
-		if req.InStock {
+	if req.InStock != nil {
+		if *req.InStock {
 			conditions = append(conditions, "stock > 0")
 		} else {
 			conditions = append(conditions, "stock = 0")
@@ -55,17 +43,17 @@ func (pr productRepository) Gets(ctx context.Context, req request.GetProducts) (
 
 	if len(conditions) > 0 {
 		query += fmt.Sprintf(" WHERE %s", strings.Join(conditions, " AND "))
-		query += " AND deleted_at IS NULL"
+		query += " AND is_available = true AND deleted_at IS NULL"
 	} else {
-		query += " WHERE deleted_at IS NULL"
+		query += " WHERE is_available = true AND deleted_at IS NULL"
 	}
 
-	if shouldFilter.Price && shouldFilter.CreatedAt {
-		query += fmt.Sprintf(" ORDER BY price %s, created_at %s", req.Price, req.CreatedAt)
-	} else if shouldFilter.Price {
-		query += fmt.Sprintf(" ORDER BY price %s", req.Price)
-	} else if shouldFilter.CreatedAt {
-		query += fmt.Sprintf(" ORDER BY created_at %s", req.CreatedAt)
+	if req.Price != nil && req.CreatedAt != nil {
+		query += fmt.Sprintf(" ORDER BY price %s, created_at %s", *req.Price, *req.CreatedAt)
+	} else if req.Price != nil {
+		query += fmt.Sprintf(" ORDER BY price %s", *req.Price)
+	} else if req.CreatedAt != nil {
+		query += fmt.Sprintf(" ORDER BY created_at %s", *req.CreatedAt)
 	} else {
 		query += " ORDER BY created_at ASC"
 	}

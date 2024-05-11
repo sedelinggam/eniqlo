@@ -7,9 +7,9 @@ type CreateProduct struct {
 	ImageURL    string `json:"imageUrl" validate:"required"`
 	Notes       string `json:"notes" validate:"required,min=1,max=200"`
 	Price       uint   `json:"price" validate:"required,gte=1"`
-	Stock       uint   `json:"stock" validate:"required,gte=0,lte=100000"`
+	Stock       *uint  `json:"stock" validate:"required,gte=0,lte=100000"`
 	Location    string `json:"location" validate:"required,min=1,max=200"`
-	IsAvailable bool   `json:"isAvailable" validate:"required"`
+	IsAvailable *bool  `json:"isAvailable" validate:"required"`
 }
 
 type UpdateProduct struct {
@@ -55,4 +55,15 @@ type ShouldGetProductsFilter struct {
 	Price       bool
 	InStock     bool
 	CreatedAt   bool
+}
+
+type GetCustomerProducts struct {
+	Limit     int32
+	Offset    int32
+	Name      *string
+	Category  *string
+	Sku       *string
+	Price     *string
+	InStock   *bool
+	CreatedAt *string
 }
