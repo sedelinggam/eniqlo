@@ -21,11 +21,13 @@ type GetCheckoutHistories struct {
 }
 
 type CheckoutProduct struct {
-	CustomerID     string `json:"customerId" validate:"required"`
-	ProductDetails []struct {
-		ProductID string `json:"productId" validate:"required"`
-		Quantity  uint   `json:"quantity" validate:"required,gte=1"`
-	} `json:"productDetails"`
-	Paid   int `json:"paid" validate:"required,gte=0"`
-	Change int `json:"change" validate:"required,gte=0"`
+	CustomerID     string                   `json:"customerId" validate:"required"`
+	ProductDetails []CheckoutProductDetails `json:"productDetails"`
+	Paid           int                      `json:"paid" validate:"required,gte=1"`
+	Change         int                      `json:"change" validate:"required,gte=0"`
+}
+
+type CheckoutProductDetails struct {
+	ProductID string `json:"productId" validate:"required"`
+	Quantity  uint   `json:"quantity" validate:"required,gte=1"`
 }

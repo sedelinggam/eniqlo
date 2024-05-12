@@ -24,6 +24,11 @@ func (ph productHandler) GetCustomerProducts(c echo.Context) error {
 		req.Name = &name
 	}
 
+	if sku := queries.Get("sku"); sku != "" {
+		sku := queries.Get("sku")
+		req.Sku = &sku
+	}
+
 	if category := queries.Get("category"); category != "" {
 		err := ph.val.Var(queries.Get("category"), "oneof=Clothing Accessories Footwear Beverages")
 		if err == nil {

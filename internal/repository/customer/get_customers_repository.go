@@ -35,7 +35,6 @@ func (pr customerRepository) GetCustomers(ctx context.Context, req request.Custo
 
 	query += " ORDER BY created_at ASC"
 
-	fmt.Println(query)
 	err = pr.db.Select(&resp, query, filter...)
 	if err != nil {
 		return nil, err

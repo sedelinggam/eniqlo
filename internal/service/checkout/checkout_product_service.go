@@ -76,6 +76,9 @@ func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData reque
 	err := cs.checkoutRepo.CreateCheckout(ctx, checkout)
 
 	if err != nil {
+		if lumen.CheckRelationNotExist(err) {
+			return nil, lumen.NewError(lumen.ErrBadRequest, err)
+		}
 		return nil, lumen.NewError(lumen.ErrInternalFailure, err)
 	}
 
