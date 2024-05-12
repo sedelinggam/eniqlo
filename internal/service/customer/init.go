@@ -15,6 +15,7 @@ type customerService struct {
 
 type CustomerService interface {
 	Register(ctx context.Context, requestData request.CustomerRegister) (*response.CustomerRegister, error)
+	GetCustomers(ctx context.Context, requestData request.Customer) ([]*response.Customer, error)
 }
 
 func New(db *sqlx.DB) CustomerService {

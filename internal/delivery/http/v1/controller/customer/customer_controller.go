@@ -18,5 +18,6 @@ func Init(group *echo.Group, val *validator.Validate, customerSvc customerServic
 	privateRoute.Use(echojwt.WithConfig(cryptoJWT.JWTConfig()))
 
 	privateRoute.POST("/register", handler.RegisterCustomer)
+	privateRoute.GET("", handler.GetCustomer)
 
 }

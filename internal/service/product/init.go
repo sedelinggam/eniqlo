@@ -17,6 +17,8 @@ type ProductService interface {
 	CreateProduct(ctx context.Context, requestData request.CreateProduct) (*response.CreateProduct, error)
 	UpdateProduct(ctx context.Context, requestData request.UpdateProduct) (*response.UpdateProduct, error)
 	GetProducts(ctx context.Context, requestData request.GetProducts) (*[]response.GetProducts, error)
+	GetCustomerProducts(ctx context.Context, requestData request.GetCustomerProducts) (*[]response.GetProducts, error)
+	DeleteProducts(ctx context.Context, requestData request.DeleteProduct) (*response.DeleteProduct, error)
 }
 
 func New(db *sqlx.DB) ProductService {
