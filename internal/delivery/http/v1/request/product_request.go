@@ -38,18 +38,6 @@ type GetProducts struct {
 	CreatedAt   string
 }
 
-type CheckoutProduct struct {
-	CustomerID     string                   `json:"customerId" validate:"required"`
-	ProductDetails []CheckoutProductDetails `json:"productDetails"`
-	Paid           int                      `json:"paid"`
-	Change         int                      `json:"change"`
-}
-
-type CheckoutProductDetails struct {
-	ProductID string `json:"productId" validate:"required"`
-	Quantity  uint   `json:"quantity" validate:"required,gte=1"`
-}
-
 type DeleteProduct struct {
 	ID string
 }

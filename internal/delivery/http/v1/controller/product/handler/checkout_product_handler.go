@@ -31,6 +31,12 @@ func (ph productHandler) CheckoutProduct(c echo.Context) error {
 	ctx := context.WithValue(c.Request().Context(), cryptoJWT.KeyPhoneNumber, phoneNumber)
 
 	// Create a new validator instance
+	for _, v := range req.ProductDetails {
+		err = ph.val.Struct(v)
+		if err != nil {
+			return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
+		}
+	}
 	err = ph.val.Struct(req)
 	if err != nil {
 		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
