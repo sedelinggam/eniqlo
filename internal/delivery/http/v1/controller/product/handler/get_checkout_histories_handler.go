@@ -32,10 +32,10 @@ func (ph productHandler) GetCheckoutHistories(c echo.Context) error {
 		CustomerID: c.QueryParam("customerId"),
 	}
 
-	if customerID := c.QueryParam("customerID"); customerID != "" {
-		err := ph.val.Var(c.QueryParam("customerID"), "uuid")
+	if customerID := c.QueryParam("customerId"); customerID != "" {
+		err := ph.val.Var(c.QueryParam("customerId"), "uuid")
 		if err == nil {
-			req.CustomerID = c.QueryParam("customerID")
+			req.CustomerID = c.QueryParam("customerId")
 		}
 	}
 
