@@ -5,3 +5,4 @@ tmp
 .vscode
 /vendor
 main_pinginciuman
+*.pem

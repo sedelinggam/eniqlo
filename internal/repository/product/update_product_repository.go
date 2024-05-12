@@ -11,10 +11,10 @@ func (cr productRepository) Update(ctx context.Context, data entity.Product) err
 
 	tx := cr.db.MustBegin()
 	_, err := tx.Exec(query, data.Name, data.SKU, data.Category, data.ImageUrl, data.Notes, data.Price, data.Stock, data.Location, data.IsAvailable, data.ID)
+	tx.Commit()
 	if err != nil {
 		return err
 	}
-	tx.Commit()
 
 	return nil
 }

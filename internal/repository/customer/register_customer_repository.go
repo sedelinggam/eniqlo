@@ -11,9 +11,10 @@ func (cr customerRepository) Register(ctx context.Context, data entity.Customer)
 
 	tx := cr.db.MustBegin()
 	_, err := tx.NamedExecContext(ctx, query, data)
+	tx.Commit()
 	if err != nil {
 		return err
 	}
-	tx.Commit()
+
 	return nil
 }

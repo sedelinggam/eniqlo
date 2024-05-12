@@ -5,11 +5,9 @@ import (
 	"eniqlo/internal/delivery/http/v1/request"
 	"eniqlo/internal/delivery/http/v1/response"
 	"eniqlo/internal/entity"
-	cache "eniqlo/package/caching"
 	"eniqlo/package/crypto/bcrypt"
 	cryptoJWT "eniqlo/package/crypto/jwt"
 	"eniqlo/package/lumen"
-	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -20,12 +18,6 @@ func (ss staffService) Register(ctx context.Context, requestData request.StaffRe
 		err          error
 		hashPassword string
 	)
-
-	//Check if user already exist
-	cacheAccessToken := cache.GetAccessToken(requestData.PhoneNumber)
-	if cacheAccessToken != nil && cacheAccessToken.Expired.After(time.Now()) {
-		return nil, lumen.NewError(lumen.ErrConflict, errors.New("conflicts"))
-	}
 
 	//Password Hash
 	hashPassword, err = bcrypt.HashPassword(requestData.Password)
@@ -69,8 +61,5 @@ func (ss staffService) Register(ctx context.Context, requestData request.StaffRe
 		Name:        requestData.Name,
 		AccessToken: *accessToken,
 	}
-
-	cache.AddAccessToken(userData.PhoneNumber, respAccessToken, time.Now().Add(time.Hour*7))
-
 	return respAccessToken, nil
 }

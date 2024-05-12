@@ -30,7 +30,7 @@ func New() *sqlx.DB {
 		return nil
 	}
 
-	db.SetMaxOpenConns(20)
+	db.SetMaxOpenConns(70)
 	db.SetMaxIdleConns(20)
 
 	return db

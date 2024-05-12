@@ -11,9 +11,9 @@ func (sr staffRepository) Create(ctx context.Context, data entity.Staff) error {
 
 	tx := sr.db.MustBegin()
 	_, err := tx.NamedExecContext(ctx, query, data)
+	tx.Commit()
 	if err != nil {
 		return err
 	}
-	tx.Commit()
 	return nil
 }

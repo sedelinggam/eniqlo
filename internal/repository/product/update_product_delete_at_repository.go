@@ -12,10 +12,10 @@ func (cr productRepository) UpdateDeletedAt(ctx context.Context, data entity.Pro
 
 	tx := cr.db.MustBegin()
 	res, err := tx.Exec(query, data.DeletedAt.Time, data.ID)
+	tx.Commit()
 	if err != nil {
 		return err
 	}
-	tx.Commit()
 
 	rows, err := res.RowsAffected()
 	if err != nil {
