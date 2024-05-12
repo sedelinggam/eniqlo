@@ -20,6 +20,7 @@ type checkoutService struct {
 }
 
 type CheckoutService interface {
+	GetCheckoutHistories(ctx context.Context, requestData request.GetCheckoutHistories) (*[]response.GetCheckoutHistories, error)
 	CheckoutProduct(ctx context.Context, requestData request.CheckoutProduct) (*response.CheckoutResponse, error)
 }
 
