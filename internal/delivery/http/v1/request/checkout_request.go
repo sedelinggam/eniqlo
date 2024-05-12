@@ -23,8 +23,8 @@ type GetCheckoutHistories struct {
 type CheckoutProduct struct {
 	CustomerID     string                   `json:"customerId" validate:"required"`
 	ProductDetails []CheckoutProductDetails `json:"productDetails"`
-	Paid           int                      `json:"paid"`
-	Change         int                      `json:"change"`
+	Paid           int                      `json:"paid,omitempty" validate:"required,gte=1"`
+	Change         *int                     `json:"change,omitempty" validate:"required,gte=0"`
 }
 
 type CheckoutProductDetails struct {
