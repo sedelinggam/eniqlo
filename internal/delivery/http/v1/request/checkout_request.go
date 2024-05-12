@@ -26,6 +26,6 @@ type CheckoutProduct struct {
 		ProductID string `json:"productId" validate:"required"`
 		Quantity  uint   `json:"quantity" validate:"required,gte=1"`
 	} `json:"productDetails"`
-	Paid   int `json:"paid"`
-	Change int `json:"change"`
+	Paid   int `json:"paid" validate:"required,gte=0"`
+	Change int `json:"change" validate:"required,gte=0"`
 }
