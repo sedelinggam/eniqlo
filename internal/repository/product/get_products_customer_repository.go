@@ -29,6 +29,7 @@ func (pr productRepository) GetCustomerProducts(ctx context.Context, req request
 	}
 
 	if req.Sku != nil {
+		fmt.Println(req.Sku, "AAAAAAAAA")
 		filter = append(filter, req.Sku)
 		conditions = append(conditions, fmt.Sprintf("sku = $%d", len(filter)))
 	}

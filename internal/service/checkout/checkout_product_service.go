@@ -59,7 +59,7 @@ func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData reque
 
 	// validate change amount
 	changeAmount := uint(requestData.Paid) - totalPrice
-	if changeAmount != uint(requestData.Change) {
+	if changeAmount != uint(*requestData.Change) {
 		return nil, lumen.NewError(lumen.ErrBadRequest, errors.New("change amount is not valid"))
 
 	}
@@ -69,7 +69,7 @@ func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData reque
 		ID:         uuid.New().String(),
 		CustomerID: requestData.CustomerID,
 		Paid:       requestData.Paid,
-		Change:     requestData.Change,
+		Change:     *requestData.Change,
 		CreatedAt:  time.Now(),
 	}
 
@@ -95,6 +95,9 @@ func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData reque
 		})
 
 		if checkoutDetailErr != nil {
+			if lumen.CheckRelationNotExist(checkoutDetailErr) {
+				return nil, lumen.NewError(lumen.ErrBadRequest, checkoutDetailErr)
+			}
 			return nil, lumen.NewError(lumen.ErrInternalFailure, checkoutDetailErr)
 		}
 

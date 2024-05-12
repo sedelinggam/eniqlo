@@ -7,3 +7,6 @@ CREATE TABLE checkouts (
 
     CONSTRAINT fk_checkkout_customer_id FOREIGN KEY (customer_id) REFERENCES customers(id)
 );
+
+CREATE INDEX checkouts_id ON checkouts (id);
+CREATE INDEX checkouts_customer_id ON checkouts (customer_id);

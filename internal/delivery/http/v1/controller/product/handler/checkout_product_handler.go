@@ -6,6 +6,7 @@ import (
 	"eniqlo/internal/delivery/http/v1/response"
 	cryptoJWT "eniqlo/package/crypto/jwt"
 	"eniqlo/package/lumen"
+	"errors"
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -31,15 +32,18 @@ func (ph productHandler) CheckoutProduct(c echo.Context) error {
 	ctx := context.WithValue(c.Request().Context(), cryptoJWT.KeyPhoneNumber, phoneNumber)
 
 	// Create a new validator instance
+	err = ph.val.Struct(req)
+	if err != nil {
+		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
+	}
+	if req.Change == nil {
+		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, errors.New("change nill"))).SendResponse(c)
+	}
 	for _, v := range req.ProductDetails {
 		err = ph.val.Struct(v)
 		if err != nil {
 			return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
 		}
-	}
-	err = ph.val.Struct(req)
-	if err != nil {
-		return lumen.FromError(lumen.NewError(lumen.ErrBadRequest, err)).SendResponse(c)
 	}
 
 	resp, err = ph.checkoutService.CheckoutProduct(ctx, req)

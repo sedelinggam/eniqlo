@@ -12,5 +12,5 @@ CREATE TABLE products (
   is_avaiable BOOLEAN,
   created_at timestamptz NOT NULL
 );
-
+CREATE INDEX products_id ON products (id);
 CREATE INDEX products_sku ON products (sku);

@@ -32,9 +32,10 @@ func (cr checkoutRepository) GetCheckoutHistories(ctx context.Context, req reque
 	}
 
 	if shouldFilter.CreatedAt {
+		fmt.Println(shouldFilter.CreatedAt, req.CreatedAt, "AAAAAAAAAAAAAAAAAAAAA")
 		query += fmt.Sprintf(" ORDER BY c.created_at %s", req.CreatedAt)
 	} else {
-		query += " ORDER BY c.created_at ASC"
+		query += " ORDER BY c.created_at DESC"
 	}
 
 	filter = append(filter, req.Limit)
