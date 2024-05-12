@@ -9,3 +9,7 @@ func CheckErrorSQLUnique(err error) bool {
 func CheckErrorSQLNotFound(err error) bool {
 	return strings.Contains(err.Error(), "no rows in result set")
 }
+
+func CheckRelationNotExist(err Error) bool {
+	return strings.Contains(err.Error(), "does not exist (SQLSTATE 42P01)}")
+}

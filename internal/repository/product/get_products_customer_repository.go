@@ -55,7 +55,7 @@ func (pr productRepository) GetCustomerProducts(ctx context.Context, req request
 	} else if req.CreatedAt != nil {
 		query += fmt.Sprintf(" ORDER BY created_at %s", *req.CreatedAt)
 	} else {
-		query += " ORDER BY created_at ASC"
+		query += " ORDER BY created_at DESC"
 	}
 
 	filter = append(filter, req.Limit)

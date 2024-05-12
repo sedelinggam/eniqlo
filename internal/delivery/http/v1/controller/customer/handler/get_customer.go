@@ -26,6 +26,7 @@ func (ch customerHandler) GetCustomer(c echo.Context) error {
 
 	if phoneNumber := queries.Get("phoneNumber"); phoneNumber != "" {
 		phoneNumber := queries.Get("phoneNumber")
+		phoneNumber = "+" + phoneNumber
 		req.PhoneNumber = &phoneNumber
 	}
 
