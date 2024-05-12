@@ -22,4 +22,5 @@ func Init(group *echo.Group, val *validator.Validate, productSvc productService.
 	privateRoute.GET("", handler.GetProducts)
 
 	privateRoute.POST("/checkout", handler.CheckoutProduct)
+	privateRoute.GET("/checkout/history", handler.GetCheckoutHistories)
 }

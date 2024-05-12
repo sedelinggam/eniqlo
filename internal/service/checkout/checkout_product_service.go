@@ -70,7 +70,7 @@ func (cs checkoutService) CheckoutProduct(ctx context.Context, requestData reque
 		CustomerID: requestData.CustomerID,
 		Paid:       requestData.Paid,
 		Change:     requestData.Change,
-		CreatedAt:  time.Time{},
+		CreatedAt:  time.Now(),
 	}
 
 	err := cs.checkoutRepo.CreateCheckout(ctx, checkout)
