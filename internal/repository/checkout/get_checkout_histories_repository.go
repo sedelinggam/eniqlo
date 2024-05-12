@@ -42,6 +42,7 @@ func (cr checkoutRepository) GetCheckoutHistories(ctx context.Context, req reque
 	query += fmt.Sprintf(" LIMIT $%d", len(filter))
 
 	filter = append(filter, req.Offset)
+	fmt.Println(req.Offset, "AAAAAAAAAAAAAAAAAAAAA")
 	query += fmt.Sprintf(" OFFSET $%d", len(filter))
 
 	rows := []entity.CheckoutRow{}
